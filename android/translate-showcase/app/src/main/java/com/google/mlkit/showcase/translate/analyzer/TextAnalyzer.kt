@@ -26,18 +26,13 @@ import androidx.camera.core.ImageProxy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.TaskCompletionSource
-import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.showcase.translate.util.ImageUtils
-import com.google.mlkit.showcase.translate.util.ScopedExecutor
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
 /**
  * Analyzes the frames passed in from the camera and returns any detected text within the requested
@@ -53,13 +48,8 @@ class TextAnalyzer(
     private val detector =
         TextRecognition.getClient(TextRecognizerOptions.Builder().setExecutor(executor).build())
 
-    private val countingTask = Completable
-    private val countingExecutor = Executors.newCachedThreadPool()
-    private val countingScopedExecutor = ScopedExecutor(countingExecutor)
-
     init {
         lifecycle.addObserver(detector)
-        countingTask
     }
 
     @androidx.camera.core.ExperimentalGetImage
