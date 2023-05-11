@@ -58,7 +58,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'com.google.mlkit:object-detection:17.0.0'
 
     // Add CameraX dependencies
     implementation "androidx.camera:camera-core:"
