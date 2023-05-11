@@ -37,6 +37,9 @@ import com.google.mlkit.showcase.translate.main.MainFragment.Companion.DESIRED_W
 import com.google.mlkit.showcase.translate.util.Language
 import com.google.mlkit.showcase.translate.util.ResultOrError
 import com.google.mlkit.showcase.translate.util.SmoothedMutableLiveData
+import com.google.mlkit.vision.objects.ObjectDetection
+import com.google.mlkit.vision.objects.ObjectDetector
+import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
 import java.util.concurrent.Executor
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {

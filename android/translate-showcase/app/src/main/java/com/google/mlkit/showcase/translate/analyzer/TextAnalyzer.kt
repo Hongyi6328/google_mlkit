@@ -26,9 +26,13 @@ import androidx.camera.core.ImageProxy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.showcase.translate.util.ImageUtils
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.objects.ObjectDetection
+import com.google.mlkit.vision.objects.ObjectDetector
+import com.google.mlkit.vision.objects.defaults.ObjectDetectorOptions
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -45,11 +49,18 @@ class TextAnalyzer(
     private val result: MutableLiveData<String>,
     private val imageCropPercentages: MutableLiveData<Pair<Int, Int>>
 ) : ImageAnalysis.Analyzer {
-    private val detector =
+    private val textRecognizer =
         TextRecognition.getClient(TextRecognizerOptions.Builder().setExecutor(executor).build())
+    private val objectDetectorOptions: ObjectDetectorOptions = ObjectDetectorOptions
+        .Builder()
+        .setDetectorMode(ObjectDetectorOptions.STREAM_MODE)
+        .build()
+    private val objectDetector: ObjectDetector = ObjectDetection.getClient(objectDetectorOptions)
+    private var previousTrackId = -1;
 
     init {
-        lifecycle.addObserver(detector)
+        lifecycle.addObserver(textRecognizer)
+        lifecycle.addObserver(objectDetector)
     }
 
     @androidx.camera.core.ExperimentalGetImage
@@ -104,17 +115,27 @@ class TextAnalyzer(
     private fun recognizeTextOnDevice(
         image: InputImage
     ): Task<Text> {
-        // Pass image to an ML Kit Vision API
-        return detector.process(image)
-            .addOnSuccessListener { visionText ->
-                // Task completed successfully
-                result.value = visionText.text
+        return objectDetector.process(image)
+            .onSuccessTask { result ->
+                if (result.size == 0) {
+                    previousTrackId = -1
+                    return@onSuccessTask Tasks.forCanceled()
+                }
+                val id = result[0].trackingId
+                if (id != previousTrackId) return@onSuccessTask textRecognizer.process(image)
+                else return@onSuccessTask Tasks.forCanceled()
             }
             .addOnFailureListener { exception ->
                 // Task failed with an exception
-                Log.e(TAG, "Text recognition error", exception)
+                Log.e(TAG, "Object detection or text recognition error", exception)
                 val message = getErrorMessage(exception)
                 message?.let {
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnCanceledListener {
+                val message = "Object is the same or no objects detected"
+                message.let {
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                 }
             }
