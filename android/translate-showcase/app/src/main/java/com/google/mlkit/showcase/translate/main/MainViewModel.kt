@@ -128,8 +128,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         sourceLang.addSource(sourceText) { text ->
             languageIdentification.identifyLanguage(text)
                 .addOnSuccessListener {
-                    if (it != "und")
-                        sourceLang.value = Language(it)
+                    sourceLang.value = Language("en")
                 }
         }
 
