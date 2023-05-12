@@ -1,5 +1,6 @@
 package com.google.mlkit.showcase.translate.util.similarity
 
+import android.util.Log
 import kotlin.math.min
 
 class LevenshteinDistanceCalculator(val thres: Double): SimilarityCalculator {
@@ -15,6 +16,7 @@ class LevenshteinDistanceCalculator(val thres: Double): SimilarityCalculator {
                 result = calculate(a, b, pA, pB + 1, arr)
                 result = min(result, calculate(a, b, pA + 1, pB, arr))
                 result = min(result, calculate(a, b, pA + 1, pB + 1, arr))
+                result++
             }
             arr[pA][pB] = result
             return result
@@ -22,11 +24,15 @@ class LevenshteinDistanceCalculator(val thres: Double): SimilarityCalculator {
     }
 
     override fun isVeryDifferent(a: String, b: String): Boolean {
-        return calculate(a, b) >= min(a.length, b.length) * thres
+        val v = calculate(a, b)
+        Log.w("Calculator", "a: $a ; b: $b ; diff: $v")
+        return v >= min(a.length, b.length) * thres
     }
 
     override fun calculate(a: String, b: String): Double {
-        val arr: Array<Array<Int?>> = Array(a.length) { Array(b.length) {null} }
+        if (a.isEmpty()) return b.length.toDouble()
+        if (b.isEmpty()) return a.length.toDouble()
+        val arr: Array<Array<Int?>> = Array(a.length + 1) { Array(b.length + 1) {null} }
         return calculate(a, b, 0, 0, arr).toDouble()
     }
 }

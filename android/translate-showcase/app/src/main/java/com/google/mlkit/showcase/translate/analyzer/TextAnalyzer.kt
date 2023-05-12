@@ -48,7 +48,7 @@ class TextAnalyzer(
     private val imageCropPercentages: MutableLiveData<Pair<Int, Int>>
 ) : ImageAnalysis.Analyzer {
 
-    private val DISTANCE_PERCENTAGE_THRESHOLD: Double = 10.0 / 100
+    private val DISTANCE_PERCENTAGE_THRESHOLD: Double = 5.0 / 100
     private val detector =
         TextRecognition.getClient(TextRecognizerOptions.Builder().setExecutor(executor).build())
     private var calculator: SimilarityCalculator = LevenshteinDistanceCalculator(DISTANCE_PERCENTAGE_THRESHOLD)
