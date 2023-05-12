@@ -49,18 +49,12 @@ class TextAnalyzer(
     private val detector =
         TextRecognition.getClient(TextRecognizerOptions.Builder().setExecutor(executor).build())
 
-    private var count = 0
-    private lateinit var startTime: LocalDateTime
-
     init {
         lifecycle.addObserver(detector)
     }
 
     @androidx.camera.core.ExperimentalGetImage
     override fun analyze(imageProxy: ImageProxy) {
-        count++
-        if (count == 1) startTime = LocalDateTime.now()
-        if (count == 61) print("Time used: " + (LocalDateTime.now().toLocalTime().toSecondOfDay() - startTime.toLocalTime().toSecondOfDay()))
 
 
         val mediaImage = imageProxy.image ?: return
