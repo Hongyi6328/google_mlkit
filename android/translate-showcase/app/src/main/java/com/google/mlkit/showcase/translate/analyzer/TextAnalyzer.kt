@@ -28,6 +28,8 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.common.MlKitException
 import com.google.mlkit.showcase.translate.util.ImageUtils
+import com.google.mlkit.showcase.translate.util.similarity.LevenshteinDistanceCalculator
+import com.google.mlkit.showcase.translate.util.similarity.SimilarityCalculator
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
@@ -46,10 +48,10 @@ class TextAnalyzer(
     private val imageCropPercentages: MutableLiveData<Pair<Int, Int>>
 ) : ImageAnalysis.Analyzer {
 
-    val DISTANCE_PERCENTAGE_THRESHOLD: Double = 1.0 / 100
+    private val DISTANCE_PERCENTAGE_THRESHOLD: Double = 10.0 / 100
     private val detector =
         TextRecognition.getClient(TextRecognizerOptions.Builder().setExecutor(executor).build())
-    private val translatedStr = ""
+    private var calculator: SimilarityCalculator = LevenshteinDistanceCalculator(DISTANCE_PERCENTAGE_THRESHOLD)
 
     init {
         lifecycle.addObserver(detector)
@@ -113,6 +115,7 @@ class TextAnalyzer(
         return detector.process(image)
             .addOnSuccessListener { visionText ->
                 // Task completed successfully
+                if (result.value == null || calculator.isVeryDifferent(result.value!!, visionText.text))
                 result.value = visionText.text
             }
             .addOnFailureListener { exception ->

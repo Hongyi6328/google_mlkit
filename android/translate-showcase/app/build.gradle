@@ -49,12 +49,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    externalNativeBuild {
-        cmake {
-            path file('src/main/cpp/rapid_fuzz/CMakeLists.txt')
-            version '3.18.1'
-        }
-    }
 }
 
 dependencies {

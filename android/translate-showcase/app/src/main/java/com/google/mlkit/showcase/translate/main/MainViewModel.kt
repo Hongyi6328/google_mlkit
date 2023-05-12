@@ -37,8 +37,6 @@ import com.google.mlkit.showcase.translate.main.MainFragment.Companion.DESIRED_W
 import com.google.mlkit.showcase.translate.util.Language
 import com.google.mlkit.showcase.translate.util.ResultOrError
 import com.google.mlkit.showcase.translate.util.SmoothedMutableLiveData
-import com.google.mlkit.showcase.translate.util.SmoothedMutableLiveSourceText
-import com.google.mlkit.showcase.translate.util.similarity.LevenshteinDistanceCalculator
 import java.util.concurrent.Executor
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -55,7 +53,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     val targetLang = MutableLiveData<Language>()
-    val sourceText = SmoothedMutableLiveSourceText(SMOOTHING_DURATION, LevenshteinDistanceCalculator(10.0 / 100))
+    val sourceText = SmoothedMutableLiveData<String>(SMOOTHING_DURATION)
 
     // We set desired crop percentages to avoid having the analyze the whole image from the live
     // camera feed. However, we are not guaranteed what aspect ratio we will get from the camera, so
