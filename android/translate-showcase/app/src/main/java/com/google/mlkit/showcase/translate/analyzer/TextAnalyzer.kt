@@ -32,7 +32,6 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import java.time.LocalDateTime
 import java.util.concurrent.Executor
 
 /**
@@ -46,8 +45,11 @@ class TextAnalyzer(
     private val result: MutableLiveData<String>,
     private val imageCropPercentages: MutableLiveData<Pair<Int, Int>>
 ) : ImageAnalysis.Analyzer {
+
+    val DISTANCE_PERCENTAGE_THRESHOLD: Double = 1.0 / 100
     private val detector =
         TextRecognition.getClient(TextRecognizerOptions.Builder().setExecutor(executor).build())
+    private val translatedStr = ""
 
     init {
         lifecycle.addObserver(detector)

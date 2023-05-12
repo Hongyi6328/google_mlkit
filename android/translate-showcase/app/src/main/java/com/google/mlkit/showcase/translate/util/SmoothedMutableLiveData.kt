@@ -26,8 +26,8 @@ import androidx.lifecycle.MutableLiveData
  *
  * @param duration time delay to wait in milliseconds
  */
-class SmoothedMutableLiveData<T>(private val duration: Long) : MutableLiveData<T>() {
-    private var pendingValue: T? = null
+open class SmoothedMutableLiveData<T>(private val duration: Long) : MutableLiveData<T>() {
+    var pendingValue: T? = null
     private val runnable = Runnable {
         super.setValue(pendingValue)
     }
