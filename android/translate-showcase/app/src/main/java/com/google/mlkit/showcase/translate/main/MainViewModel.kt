@@ -83,14 +83,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-    val sourceLang = MediatorLiveData<Language>()
+    val sourceLang = Language("en")
 
     private fun translate(): Task<String> {
         if (modelDownloading.value != false || translating.value != false) {
             return Tasks.forCanceled()
         }
         val text = sourceText.value ?: return Tasks.forResult("")
-        val source = sourceLang.value ?: return Tasks.forResult("")
+        val source = sourceLang
         val target = targetLang.value ?: return Tasks.forResult("")
         val sourceLangCode =
             TranslateLanguage.fromLanguageTag(source.code) ?: return Tasks.forCanceled()
