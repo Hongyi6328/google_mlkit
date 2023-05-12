@@ -23,11 +23,8 @@ import android.graphics.*
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.LayoutInflater
+import android.view.*
 import android.view.Surface.ROTATION_90
-import android.view.SurfaceHolder
-import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -225,14 +222,14 @@ class MainFragment : Fragment() {
 
         val preview = Preview.Builder()
             .setTargetAspectRatio(screenAspectRatio)
-            .setTargetRotation(rotation)
+            .setTargetRotation(Surface.ROTATION_90)
             .build()
 
         // Build the image analysis use case and instantiate our analyzer
         imageAnalyzer = ImageAnalysis.Builder()
             // We request aspect ratio but no resolution
             .setTargetAspectRatio(screenAspectRatio)
-            .setTargetRotation(rotation)
+            .setTargetRotation(Surface.ROTATION_90)
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
             .also {
