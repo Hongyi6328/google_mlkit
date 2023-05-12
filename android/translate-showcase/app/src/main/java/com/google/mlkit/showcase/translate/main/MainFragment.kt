@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Surface.ROTATION_90
 import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
@@ -107,6 +108,7 @@ class MainFragment : Fragment() {
 
         container = view as ConstraintLayout
         viewFinder = container.findViewById(R.id.viewfinder)
+        viewFinder.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
 
         // Initialize our background executor
         cameraExecutor = Executors.newCachedThreadPool()
