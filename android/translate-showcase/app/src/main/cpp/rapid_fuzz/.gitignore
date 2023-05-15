@@ -1,9 +1,0 @@
-.vscode/
-.cache/
-.idea/
-build/
-.cache/
-*.data
-*.so
-*.o
-*.out
