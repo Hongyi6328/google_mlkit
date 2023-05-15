@@ -25,8 +25,11 @@ class LevenshteinDistanceCalculator(val thres: Double): SimilarityCalculator {
 
     override fun isVeryDifferent(a: String, b: String): Boolean {
         val v = calculate(a, b)
-        Log.w("Calculator", "a: $a ; b: $b ; diff: $v")
-        return v >= min(a.length, b.length) * thres
+        val l = min(a.length, b.length)
+        Log.w("Calculator", "---------------------------------------------------------------------\n" +
+                "a:\n$a\n b:\n$b\n diff:$v; min length: $l; threshold: ${l * thres}\n" +
+                "---------------------------------------------------------------------\n")
+        return v >= l * thres
     }
 
     override fun calculate(a: String, b: String): Double {
